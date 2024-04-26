@@ -9,15 +9,19 @@ namespace Temporal.Payload.Repro
 		/// </summary>
 		public Task<IReadOnlyCollection<Temporalio.Api.Common.V1.Payload>> DecodeAsync(IReadOnlyCollection<Temporalio.Api.Common.V1.Payload> payloads)
 		{
+			List<Temporalio.Api.Common.V1.Payload> clonedPayloads = new List<Temporalio.Api.Common.V1.Payload>();
+
 			foreach (Temporalio.Api.Common.V1.Payload payload in payloads)
 			{
 				if (payload.TryReadMetadata(out string? metadata))
 				{
 					TestContext.Out.WriteLine($"Now reading metadata {metadata}...");
 				}
+
+				clonedPayloads.Add(payload.Clone());
 			}
 
-			return Task.FromResult<IReadOnlyCollection<Temporalio.Api.Common.V1.Payload>>(payloads);
+			return Task.FromResult<IReadOnlyCollection<Temporalio.Api.Common.V1.Payload>>(clonedPayloads);
 		}
 
 		/// <summary>
